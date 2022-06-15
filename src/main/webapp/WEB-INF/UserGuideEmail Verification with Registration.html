@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Verification with Registration</title>
+</head>
+<body>
+<h1> PORT 2002 : Email Verification with Registration</h1>
+<h4> npm install -g maildev </h4>
+<h4><small>If An error (maildev.ps1 cannot be loaded because running scripts is disabled on this system.)
+<ul>
+    <h4>Run Power Shell</h4>
+    <li>Get-ExecutionPolicy -List</li>
+    <li>Get-ExecutionPolicy -Scope CurrentUser</li>
+    <li>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</li>
+    <li>y</li>
+</ul>
+</small></h4>
+<h4>In Postman URL : http://localhost:2002/api/v1/registration : TYPE : POST</h4>
+<h4>
+    &nbsp;{ <br>
+    &nbsp;&nbsp; "firstName":"Rivindu", <br>
+    &nbsp;&nbsp;   "lastName" :"Wijayarathna",<br>
+    &nbsp;&nbsp; "email" : "gemzonaeda1@gmail.com",<br>
+    &nbsp;&nbsp; "password" : "666",<br>
+    &nbsp;&nbsp; "role" :"ADMIN"<br>
+    &nbsp; }<br></h4>
+<h4>Generate Token</h4>
+<h4>Token will Expire in few minutes</h4>
+
+<h4> Start maildev from CMD Command >> maildev</h4>
+<h4> Start <a href="http://0.0.0.0:1080/">http://0.0.0.0:1080/ </a>OR <a href="http://localhost:1080/">http://localhost:1080/</a></h4>
+<h4> Confirm Mail</h4>
+
+<hr>
+<h4> Then Try to Access this URL from Browser<a href="http://localhost:2002/api/v1/"> http://localhost:2002/api/v1/</a></h4>
+<h4> Then It's redirect to http://localhost:2002/login </h4>
+<h4> Then Login using email and Password</h4>
+
+</body>
+</html>
