@@ -3,13 +3,18 @@ package com.example.demo.appuser;
 import com.example.demo.registration.token.ConfirmationToken;
 import com.example.demo.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,6 +27,36 @@ public class AppUserService implements UserDetailsService {
     private final AppUserRepository appUserRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
+
+
+//    ////////////////////////////////////////////////////////////////////////////////
+
+
+    public void updateResetPasswordToken(String token, String email) throws UsernameNotFoundException {
+        AppUser customer = appUserRepository.findByUserEmail(email);
+        if (customer != null) {
+            customer.setResetPasswordToken(token);
+            appUserRepository.save(customer);
+        } else {
+            throw new UsernameNotFoundException("Could not find any customer with the email " + email);
+        }
+    }
+
+    public AppUser getByResetPasswordToken(String token) {
+        return appUserRepository.findByResetPasswordToken(token);
+    }
+
+    public void updatePassword(AppUser customer, String newPassword) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        customer.setPassword(encodedPassword);
+
+        customer.setResetPasswordToken(null);
+        appUserRepository.save(customer);
+    }
+
+//    ///////////////////////////////////////////////////////////////////////////////
+
 
     @Override
     public UserDetails loadUserByUsername(String email)

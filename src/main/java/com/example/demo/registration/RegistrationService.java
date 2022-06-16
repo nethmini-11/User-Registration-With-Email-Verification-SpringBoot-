@@ -24,6 +24,7 @@ public class RegistrationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
 
+
     @Autowired
    private RealEmail realEmail;
 

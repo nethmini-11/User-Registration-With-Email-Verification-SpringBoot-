@@ -41,6 +41,9 @@ public class AppUser implements UserDetails {
     private Boolean locked = false;
     private Boolean enabled = false;
 
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
+
     public AppUser(String firstName,
                    String lastName,
                    String email,
