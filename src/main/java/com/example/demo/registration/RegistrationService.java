@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.Executors;
 
 @Service
 @AllArgsConstructor
@@ -73,7 +74,13 @@ public class RegistrationService {
         confirmationTokenService.setConfirmedAt(token);
         appUserService.enableAppUser(
                 confirmationToken.getAppUser().getEmail());
-        realEmail.sendMailToNewAppUser(name, email);
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                realEmail.sendMailToNewAppUser(name, email);
+            }
+        });
+
         return "\n" +
                 "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
