@@ -4,9 +4,11 @@ import com.example.demo.appuser.AppUser;
 import com.example.demo.appuser.AppUserRole;
 import com.example.demo.appuser.AppUserService;
 import com.example.demo.email.EmailSender;
+import com.example.demo.email.RealEmail;
 import com.example.demo.registration.token.ConfirmationToken;
 import com.example.demo.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,9 @@ public class RegistrationService {
     private final EmailValidator emailValidator;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
+
+    @Autowired
+   private RealEmail realEmail;
 
     public String register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.
@@ -40,7 +45,7 @@ public class RegistrationService {
                 )
         );
 
-        String link = "http://localhost:2002/api/v1/registration/confirm?token=" + token;
+        String link = "http://localhost:2002/api/v1/registration/confirm?token=" + token+"&name="+request.getFirstName() +"&email="+request.getEmail();
         emailSender.send(
                 request.getEmail(),
                 buildEmail(request.getFirstName(), link));
@@ -49,7 +54,7 @@ public class RegistrationService {
     }
 
     @Transactional
-    public String confirmToken(String token) {
+    public String confirmToken(String token, String name, String email) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
                 .orElseThrow(() ->
@@ -68,7 +73,63 @@ public class RegistrationService {
         confirmationTokenService.setConfirmedAt(token);
         appUserService.enableAppUser(
                 confirmationToken.getAppUser().getEmail());
-        return "confirmed";
+        realEmail.sendMailToNewAppUser(name, email);
+        return "\n" +
+                "<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <title>Email Verification with Registration</title>\n" +
+                "    <style>\n" +
+                "        html,\n" +
+                "        body {\n" +
+                "            font-family: sans-serif;\n" +
+                "            height: 100%;\n" +
+                "            width: 100%;\n" +
+                "            background: rgba(200,200,200,0.2);\n" +
+                "        }\n" +
+                "        .container-720 {\n" +
+                "            max-width: 720px;\n" +
+                "            margin: auto;\n" +
+                "            background: #fff;\n" +
+                "        }\n" +
+                "\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "\n" +
+                "<div class=\"container-720\">\n" +
+                "    <div class=\"heading\" style=\"background: #5cb85c;display:flex; align-items: center;justify-content: space-between;margin-left:-20px;margin-right: -20px;box-shadow: 0 5px 10px -5px green;padding-left: 30px;padding-right:30px;\">\n" +
+                "        <h1 style=\"line-height: 50px;padding-left: 10px;color:white\"> "+ name +" Registration Successfully</h1>\n" +
+                "        <img src=\"\" alt=\"\" style=\"height: 50px;\">\n" +
+                "    </div>\n" +
+                "    <main style=\"padding: 10px;\">\n" +
+                "        <p>Hello New User,</p>\n" +
+                "        <p>\n" +
+                "            You have successfully registered for the System\n" +
+                "        </p>\n" +
+                "\n" +
+                "        <p><i>\n" +
+                "                    </i></p>\n" +
+                "        <p>\n" +
+                "\n" +
+                "        </p>\n" +
+                "        <p>\n" +
+                "            <a\n" +
+                "            </a>\n" +
+                "        </p>\n" +
+                "        <p>.</p>\n" +
+                "    </main>\n" +
+                "    <footer style=\"padding:20px 10px 20px 10px;font-size: 0.9em;border-top:2px double #1f3f1f;\">\n" +
+                "\n" +
+                "        <p>\n" +
+                "Lorem   \n" +
+                "        </p>\n" +
+                "    </footer>\n" +
+                "</div>\n" +
+                "\n" +
+                "</body>\n" +
+                "</html>";
     }
 
     private String buildEmail(String name, String link) {
