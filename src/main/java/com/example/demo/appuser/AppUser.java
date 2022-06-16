@@ -33,6 +33,7 @@ public class AppUser implements UserDetails {
     private Long id;
     private String firstName;
     private String lastName;
+    @Column(name = "email", length = 50, unique = true)
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
