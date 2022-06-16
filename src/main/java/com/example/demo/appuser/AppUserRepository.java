@@ -1,3 +1,8 @@
+/**
+ * @author - Chamath_Wijayarathna
+ * Date :6/14/2022
+ */
+
 package com.example.demo.appuser;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,14 +21,12 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE AppUser a " +
-            "SET a.enabled = TRUE WHERE a.email = ?1")
+    @Query("UPDATE AppUser a " + "SET a.enabled = TRUE WHERE a.email = ?1")
     int enableAppUser(String email);
 
 
-
     @Query("SELECT c FROM AppUser c WHERE c.email = ?1")
-     AppUser findByUserEmail(String email);
+    AppUser findByUserEmail(String email);
 
-     AppUser findByResetPasswordToken(String token);
+    AppUser findByResetPasswordToken(String token);
 }

@@ -1,3 +1,8 @@
+/**
+ * @author - Chamath_Wijayarathna
+ * Date :6/16/2022
+ */
+
 package com.example.demo.registration.token;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +26,6 @@ public class ConfirmationTokenService {
     }
 
     public int setConfirmedAt(String token) {
-        return confirmationTokenRepository.updateConfirmedAt(
-                token, LocalDateTime.now());
+        return confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
     }
 }

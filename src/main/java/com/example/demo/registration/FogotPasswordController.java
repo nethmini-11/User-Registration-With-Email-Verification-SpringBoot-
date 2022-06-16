@@ -11,11 +11,9 @@ import com.example.demo.appuser.AppUserService;
 import com.example.demo.utility.Utility;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +40,6 @@ public class FogotPasswordController {
     public String processForgotPassword(HttpServletRequest request, Model model, @RequestBody AppUser appUser) {
         String email = appUser.getEmail();
         String token = RandomString.make(100);
-        System.out.println(token + "ddddddddddddddddddddddddddddddddddddddddddddddddddd" + email + "JJJJJJJJJJJJJJJJJJJJJJJJ" + Utility.getSiteURL(request));
         String resetPasswordLink = null;
         try {
             appUserService.updateResetPasswordToken(token, email);
@@ -61,7 +58,6 @@ public class FogotPasswordController {
 
     @GetMapping(path = "/reset_password/reset")
     public void showResetPasswordForm(HttpServletRequest request, @RequestParam("token") String token, Model model) {
-        System.out.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT " + token);
         AppUser user = appUserService.getByResetPasswordToken(token);
         model.addAttribute("token", token);
 
@@ -72,10 +68,8 @@ public class FogotPasswordController {
 
     @PostMapping("reset_password/reset")
     public void processResetPassword(HttpServletRequest request, Model model) {
-        System.out.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTjjjjjjjjjjjjjjjjjjjjjT ");
-        String token = request.getParameter("token");
+         String token = request.getParameter("token");
         String password = request.getParameter("password");
-        System.out.println(token + " " + password + "aaaaaaaaaaaaaaaaaaaaaaaaaa");
 
         AppUser user = appUserService.getByResetPasswordToken(token);
         System.out.println(user.getFirstName());

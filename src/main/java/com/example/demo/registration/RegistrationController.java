@@ -1,3 +1,8 @@
+/**
+ * @author - Chamath_Wijayarathna
+ * Date :6/16/2022
+ */
+
 package com.example.demo.registration;
 
 import lombok.AllArgsConstructor;
@@ -16,8 +21,8 @@ public class RegistrationController {
     }
 
     @GetMapping(path = "confirm")
-    public String confirm(@RequestParam("token") String token, @RequestParam("name") String name, @RequestParam("email")String email) {
-       return registrationService.confirmToken(token, name,email);
+    public String confirm(@RequestParam("token") String token, @RequestParam("name") String name, @RequestParam("email") String email) {
+        return registrationService.confirmToken(token, name, email);
     }
 
 }

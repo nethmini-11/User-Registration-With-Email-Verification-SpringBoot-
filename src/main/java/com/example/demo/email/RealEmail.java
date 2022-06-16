@@ -3,14 +3,13 @@
  * Date :6/16/2022
  */
 
-
 package com.example.demo.email;
+
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
@@ -96,8 +95,8 @@ public class RealEmail {
                             "            <p style=\"font-weight: bolder;font-size: 42px;\n" +
                             "\t\t\t\t\t\t\tletter-spacing: 0.025em;\n" +
                             "\t\t\t\t\t\t\tcolor:black;\">\n" +
-                            "                Hello Cloud Of Goods User "+name +" !\n" +
-                            "                <br><h3> Your Email "+to +" Successfully Registered to the System</h3>\n" +
+                            "                Hello Cloud Of Goods User " + name + " !\n" +
+                            "                <br><h3> Your Email " + to + " Successfully Registered to the System</h3>\n" +
                             "            </p>\n" +
                             "        </td>\n" +
                             "    </tr>\n" +
@@ -138,7 +137,7 @@ public class RealEmail {
                             "</body>\n" +
                             "\n" +
                             "</html>"
- ,"text/html"
+                    , "text/html"
             );
             msg.setHeader("XPriority", "1");
             Transport.send(msg);
