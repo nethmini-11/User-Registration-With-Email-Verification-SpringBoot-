@@ -23,11 +23,13 @@ public class EmailServiceBOImpl implements EmailSenderBO {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(EmailServiceBOImpl.class);
 
+    //Extended MailSender interface for JavaMail,
+    // supporting MIME messages both as direct arguments and through preparation callbacks.
     private final JavaMailSender mailSender;
 
     @Override
     @Async
-    public void send(String to, String email) {
+    public void send(String to, String email) { // Email Send mailDev
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");

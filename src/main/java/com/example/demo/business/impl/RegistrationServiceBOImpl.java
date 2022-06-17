@@ -33,7 +33,7 @@ public class RegistrationServiceBOImpl implements RegistrationServiceBO {
     private RealEmailBOImpl realEmailBOImpl;
 
     @Override
-    public String register(RegistrationRequestDTO request) {
+    public String register(RegistrationRequestDTO request) { // Register User Json Object
         boolean isValidEmail = emailValidatorBOImpl.test(request.getEmail());
 
         if (!isValidEmail) {
@@ -52,6 +52,7 @@ public class RegistrationServiceBOImpl implements RegistrationServiceBO {
 
     @Transactional
     @Override
+    //  Confirmation email link will take token, name and email
     public String confirmToken(String token, String name, String email) {
         ConfirmationToken confirmationToken = confirmationTokenServiceBOImpl.getToken(token).orElseThrow(() -> new IllegalStateException("token not found"));
 

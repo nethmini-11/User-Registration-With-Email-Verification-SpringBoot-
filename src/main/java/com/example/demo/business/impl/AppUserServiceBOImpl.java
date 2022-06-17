@@ -25,8 +25,10 @@ import java.util.UUID;
 @CrossOrigin
 public class AppUserServiceBOImpl implements UserDetailsService, AppUserServiceBO {
 
+    // loadUserByUsername If Not Found
     private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
 
+    // App User DAO Class
     private final AppUserRepositoryDAO appUserRepositoryDAO;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenServiceBOImpl confirmationTokenServiceBOImpl;
@@ -35,36 +37,38 @@ public class AppUserServiceBOImpl implements UserDetailsService, AppUserServiceB
 //    ////////////////////////////////////////////////////////////////////////////////
 
 
-    @Override
+    @Override //Update Reset Password Method check User Is Enabled (Registration Confirmed By Email) Calling From Forgot Password Controller
     public void updateResetPasswordToken(String token, String email) throws UsernameNotFoundException {
         AppUser user = appUserRepositoryDAO.findByUserEmail(email);
-        if (user != null && user.getEnabled()) { //
+        if (user != null && user.getEnabled()) { // Check User In the Database and Is he Confirmed the Email Verification
             user.setResetPasswordToken(token);
-            appUserRepositoryDAO.save(user);
+            appUserRepositoryDAO.save(user);// Save Or Update User With Token
         } else {
             throw new UsernameNotFoundException("Could not find any customer with the email " + email);
         }
     }
 
     @Override
+    // Database Check Is there any User In the database from this token
     public AppUser getByResetPasswordToken(String token) {
         return appUserRepositoryDAO.findByResetPasswordToken(token);
     }
 
     @Override
+    // Reset Password WITH NEW Password
     public void updatePassword(AppUser user, String newPassword) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(newPassword);
         user.setPassword(encodedPassword);
 
-        user.setResetPasswordToken(null);
+        user.setResetPasswordToken(null);// Set Rest Password Null after He Reset Password
         appUserRepositoryDAO.save(user);
     }
 
 //    ///////////////////////////////////////////////////////////////////////////////
 
 
-    @Override
+    @Override// Get User By Unique Email
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return appUserRepositoryDAO.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
     }

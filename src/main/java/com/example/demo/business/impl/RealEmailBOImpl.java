@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Properties;
 
 @Service
-public class RealEmailBOImpl {
+public class RealEmailBOImpl { // Send Real Email To User
 
     public void sendMailToNewAppUser(String name, String email) {
         String smsSender = "chamathrivindu12000@gmail.com";
