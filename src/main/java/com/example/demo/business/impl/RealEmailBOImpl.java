@@ -13,11 +13,14 @@ import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Properties;
 
+import static com.example.demo.security.config.CommonConfig.EMAIL_FROM;
+import static com.example.demo.security.config.CommonConfig.EMAIL_FROM_PASSWORD;
+
 @Service
 public class RealEmailBOImpl { // Send Real Email To User
 
     public void sendMailToNewAppUser(String name, String email) {
-        String smsSender = "chamathrivindu12000@gmail.com";
+        String smsSender = EMAIL_FROM;
 
 
         String to = email;
@@ -41,7 +44,7 @@ public class RealEmailBOImpl { // Send Real Email To User
 
             protected PasswordAuthentication getPasswordAuthentication() {
 
-                return new PasswordAuthentication(smsSender, "oighhaziivrlroax");
+                return new PasswordAuthentication(smsSender, EMAIL_FROM_PASSWORD);
 
             }
 

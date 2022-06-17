@@ -22,6 +22,9 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
+import static com.example.demo.security.config.CommonConfig.EMAIL_FROM;
+import static com.example.demo.security.config.CommonConfig.NAME_EMAIL_FROM;
+
 @RestController
 @RequestMapping(path = "api/v1/registration")
 public class ForgotPasswordController {
@@ -98,7 +101,7 @@ public class ForgotPasswordController {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        helper.setFrom("chamathrivindu12000@gmail.com", "Rivindu");
+        helper.setFrom(EMAIL_FROM, NAME_EMAIL_FROM);
         helper.setTo(recipientEmail);
 
         String subject = "Here's the link to reset your password";

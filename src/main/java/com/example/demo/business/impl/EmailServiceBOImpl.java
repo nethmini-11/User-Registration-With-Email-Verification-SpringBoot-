@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import static com.example.demo.security.config.CommonConfig.EMAIL_FROM;
+
 @Service
 @AllArgsConstructor
 public class EmailServiceBOImpl implements EmailSenderBO {
@@ -36,7 +38,7 @@ public class EmailServiceBOImpl implements EmailSenderBO {
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Confirm your email");
-            helper.setFrom("chamathrivindu12000@gmail.com");
+            helper.setFrom(EMAIL_FROM);
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);

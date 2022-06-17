@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.concurrent.Executors;
 
+import static com.example.demo.security.config.CommonConfig.URI;
+
 @Service
 @AllArgsConstructor
 public class RegistrationServiceBOImpl implements RegistrationServiceBO {
@@ -44,7 +46,7 @@ public class RegistrationServiceBOImpl implements RegistrationServiceBO {
 
         ));
 
-        String link = "http://localhost:2002/api/v1/registration/confirm?token=" + token + "&name=" + request.getFirstName() + "&email=" + request.getEmail();
+        String link = URI+"/api/v1/registration/confirm?token=" + token + "&name=" + request.getFirstName() + "&email=" + request.getEmail();
         emailSenderBO.send(request.getEmail(), buildEmail(request.getFirstName(), link));
 
         return token;
