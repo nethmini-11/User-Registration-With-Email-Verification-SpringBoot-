@@ -38,7 +38,7 @@ public class AppUserServiceBOImpl implements UserDetailsService, AppUserServiceB
     @Override
     public void updateResetPasswordToken(String token, String email) throws UsernameNotFoundException {
         AppUser user = appUserRepositoryDAO.findByUserEmail(email);
-        if (user != null) {
+        if (user != null && user.getEnabled()) { //
             user.setResetPasswordToken(token);
             appUserRepositoryDAO.save(user);
         } else {

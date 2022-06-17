@@ -8,7 +8,6 @@ package com.example.demo.controller;
 
 import com.example.demo.business.AppUserServiceBO;
 import com.example.demo.entity.AppUser;
-import com.example.demo.business.impl.AppUserServiceBOImpl;
 import com.example.demo.utility.Utility;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,40 +24,48 @@ import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequestMapping(path = "api/v1/registration")
-public class FogotPasswordController {
+public class ForgotPasswordController {
     @Autowired
+    // Extended MailSender interface for JavaMail, supporting MIME messages -
+    // both as direct arguments and through preparation callbacks.
     private JavaMailSender mailSender;
 
     @Autowired
     private AppUserServiceBO appUserServiceBO;
 
-    @GetMapping("/forgot_password")
+    @GetMapping("/forgot_password") // Load Forgot Password Page
     public void showForgotPasswordForm() {
     }
 
     //
-    @PostMapping("/forgot_password")
+    @PostMapping("/forgot_password") // User Send Forgot Password Email in Post
     public String processForgotPassword(HttpServletRequest request, Model model, @RequestBody AppUser appUser) {
         String email = appUser.getEmail();
-        String token = RandomString.make(100);
+        String token = RandomString.make(200); // Generate Random Token Length 200 Characters
         String resetPasswordLink = null;
         try {
+            // Update Reset Password Method check User Is Enabled (Registration Confirmed By Email)
             appUserServiceBO.updateResetPasswordToken(token, email);
+            // Create Reset Password Link With Token
             resetPasswordLink = Utility.getSiteURL(request) + "/api/v1/registration/reset_password/reset?token=" + token;
-            sendEmail(email, resetPasswordLink);
+            sendEmail(email, resetPasswordLink); // Calling to Send Email method to send email
+            // Pass Message to Interface
             model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
 
         } catch (UsernameNotFoundException ex) {
             model.addAttribute("error", ex.getMessage());
         } catch (UnsupportedEncodingException | MessagingException e) {
+            // UnsupportedEncodingException can only be thrown if I specify a wrong encoding
             model.addAttribute("error", "Error while sending email");
         }
-        return resetPasswordLink;
-    }
+        return resetPasswordLink; // Return Link For Dev Purpose
+    }// End Method
 
 
     @GetMapping(path = "/reset_password/reset")
-    public void showResetPasswordForm(HttpServletRequest request, @RequestParam("token") String token, Model model) {
+    // Method Working Once Click the Email Change my password Link
+    public void showResetPasswordForm(@RequestParam("token") String token, Model model) {
+        // Database Check Is there any User In the database from this token
         AppUser user = appUserServiceBO.getByResetPasswordToken(token);
         model.addAttribute("token", token);
 
@@ -67,26 +74,26 @@ public class FogotPasswordController {
         }
     }
 
-    @PostMapping("reset_password/reset")
+    @PostMapping("reset_password/reset") // Method to Change Password
     public void processResetPassword(HttpServletRequest request, Model model) {
-         String token = request.getParameter("token");
+        String token = request.getParameter("token");
         String password = request.getParameter("password");
 
-        AppUser user = appUserServiceBO.getByResetPasswordToken(token);
-        System.out.println(user.getFirstName());
+        AppUser user = appUserServiceBO.getByResetPasswordToken(token);// Get Password From Token
         model.addAttribute("title", "Reset your password");
 
         if (user == null) {
             model.addAttribute("message", "Invalid Token");
 
         } else {
-            appUserServiceBO.updatePassword(user, password);
+            appUserServiceBO.updatePassword(user, password); // Reset Password
 
             model.addAttribute("message", "You have successfully changed your password.");
         }
     }
 
 
+    // Email Send Method
     public void sendEmail(String recipientEmail, String resetPasswordLinkAndToken) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);

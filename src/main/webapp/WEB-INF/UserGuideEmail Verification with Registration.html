@@ -21,8 +21,8 @@
 </head>
 <body>
 <h1> PORT 2002 : Email Verification with Registration</h1>
-<h4> npm install -g maildev </h4>
-<h4><small>If An error (maildev.ps1 cannot be loaded because running scripts is disabled on this system.)
+<h4> npm install -g mailDev </h4>
+<h4><small>If An error (mailDev.ps1 cannot be loaded because running scripts is disabled on this system.)
 <ul>
     <h4>Run Power Shell</h4>
     <li>Get-ExecutionPolicy -List</li>
@@ -43,14 +43,27 @@
 <h4>Generate Token</h4>
 <h4>Token will Expire in few minutes</h4>
 
-<h4> Start maildev from CMD Command >> maildev</h4>
+<h4> Start mailDev from CMD Command >> maildev</h4>
 <h4> Start <a href="http://0.0.0.0:1080/">http://0.0.0.0:1080/ </a>OR <a href="http://localhost:1080/">http://localhost:1080/</a></h4>
 <h4> Confirm Mail</h4>
+<h4> email will send to users real email as successfully Registered</h4>
+
 
 <hr>
 <h4> Then Try to Access this URL from Browser<a href="http://localhost:2002/api/v1/"> http://localhost:2002/api/v1/</a></h4>
 <h4> Then It's redirect to http://localhost:2002/login </h4>
 <h4> Then Login using email and Password</h4>
+
+<hr>
+<h3>Reset Password</h3>
+<h5> User Must Register to the System</h5>
+<ul>
+
+    <li><h4>Once go to forget Password Page User Should enter the email address and then send to mailDev.</h4></li>
+    <li><h4>Once He Click the change password link he can enter new password.</h4></li>
+    <li><h4>Then the id & Password sent to the Server side & check token is valid.</h4></li>
+    <li><h4> If it is valid Update the password & send mail as Password Changed.</h4></li>
+</ul>
 
 </body>
 </html>

@@ -15,16 +15,18 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class RegistrationController { // Registration Controller
 
-    private final RegistrationServiceBO registrationServiceBO; // Reference to RegistrationServiceBOImpl
+    private final RegistrationServiceBO registrationServiceBO; // Reference to RegistrationServiceBO Service
 
-    @PostMapping
+    @PostMapping  // Register User Json Object
+   // {   "firstName":"Rivindu",  "lastName" :"Wijayarathna", "email" : "gemzone0@gmail.com", "password" : "1234" }
     public String register(@RequestBody RegistrationRequestDTO request) {
         return registrationServiceBO.register(request);
     }
 
     @GetMapping(path = "confirm")
+    // Confirmation email link will take token, name and email
     public String confirm(@RequestParam("token") String token, @RequestParam("name") String name, @RequestParam("email") String email) {
-        return registrationServiceBO.confirmToken(token, name, email);
+        return registrationServiceBO.confirmToken(token, name, email);// Method to Confirm token is match to the token stored in the database
     }
 
-}
+}// End Controller
