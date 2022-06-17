@@ -3,8 +3,8 @@
  * Date :6/16/2022
  */
 
-package com.example.demo.appuser;
+package com.example.demo.enumpackage;
 
-public enum AppUserRole {
+public enum AppUserRoleEnum {
     ROLE_USER
 }

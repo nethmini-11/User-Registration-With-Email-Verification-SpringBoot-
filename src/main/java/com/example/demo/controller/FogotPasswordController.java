@@ -4,10 +4,11 @@
  */
 
 
-package com.example.demo.registration;
+package com.example.demo.controller;
 
-import com.example.demo.appuser.AppUser;
-import com.example.demo.appuser.AppUserService;
+import com.example.demo.business.AppUserServiceBO;
+import com.example.demo.entity.AppUser;
+import com.example.demo.business.impl.AppUserServiceBOImpl;
 import com.example.demo.utility.Utility;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class FogotPasswordController {
     private JavaMailSender mailSender;
 
     @Autowired
-    private AppUserService appUserService;
+    private AppUserServiceBO appUserServiceBO;
 
     @GetMapping("/forgot_password")
     public void showForgotPasswordForm() {
@@ -42,7 +43,7 @@ public class FogotPasswordController {
         String token = RandomString.make(100);
         String resetPasswordLink = null;
         try {
-            appUserService.updateResetPasswordToken(token, email);
+            appUserServiceBO.updateResetPasswordToken(token, email);
             resetPasswordLink = Utility.getSiteURL(request) + "/api/v1/registration/reset_password/reset?token=" + token;
             sendEmail(email, resetPasswordLink);
             model.addAttribute("message", "We have sent a reset password link to your email. Please check.");
@@ -58,7 +59,7 @@ public class FogotPasswordController {
 
     @GetMapping(path = "/reset_password/reset")
     public void showResetPasswordForm(HttpServletRequest request, @RequestParam("token") String token, Model model) {
-        AppUser user = appUserService.getByResetPasswordToken(token);
+        AppUser user = appUserServiceBO.getByResetPasswordToken(token);
         model.addAttribute("token", token);
 
         if (user == null) {
@@ -71,7 +72,7 @@ public class FogotPasswordController {
          String token = request.getParameter("token");
         String password = request.getParameter("password");
 
-        AppUser user = appUserService.getByResetPasswordToken(token);
+        AppUser user = appUserServiceBO.getByResetPasswordToken(token);
         System.out.println(user.getFirstName());
         model.addAttribute("title", "Reset your password");
 
@@ -79,7 +80,7 @@ public class FogotPasswordController {
             model.addAttribute("message", "Invalid Token");
 
         } else {
-            appUserService.updatePassword(user, password);
+            appUserServiceBO.updatePassword(user, password);
 
             model.addAttribute("message", "You have successfully changed your password.");
         }

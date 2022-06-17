@@ -3,10 +3,12 @@
  * Date :6/16/2022
  */
 
-package com.example.demo.appuser;
+package com.example.demo.business.impl;
 
-import com.example.demo.registration.token.ConfirmationToken;
-import com.example.demo.registration.token.ConfirmationTokenService;
+import com.example.demo.DAO.AppUserRepositoryDAO;
+import com.example.demo.business.AppUserServiceBO;
+import com.example.demo.entity.AppUser;
+import com.example.demo.entity.ConfirmationToken;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,39 +23,42 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 @CrossOrigin
-public class AppUserService implements UserDetailsService {
+public class AppUserServiceBOImpl implements UserDetailsService, AppUserServiceBO {
 
     private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
 
-    private final AppUserRepository appUserRepository;
+    private final AppUserRepositoryDAO appUserRepositoryDAO;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final ConfirmationTokenService confirmationTokenService;
+    private final ConfirmationTokenServiceBOImpl confirmationTokenServiceBOImpl;
 
 
 //    ////////////////////////////////////////////////////////////////////////////////
 
 
+    @Override
     public void updateResetPasswordToken(String token, String email) throws UsernameNotFoundException {
-        AppUser user = appUserRepository.findByUserEmail(email);
+        AppUser user = appUserRepositoryDAO.findByUserEmail(email);
         if (user != null) {
             user.setResetPasswordToken(token);
-            appUserRepository.save(user);
+            appUserRepositoryDAO.save(user);
         } else {
             throw new UsernameNotFoundException("Could not find any customer with the email " + email);
         }
     }
 
+    @Override
     public AppUser getByResetPasswordToken(String token) {
-        return appUserRepository.findByResetPasswordToken(token);
+        return appUserRepositoryDAO.findByResetPasswordToken(token);
     }
 
+    @Override
     public void updatePassword(AppUser user, String newPassword) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(newPassword);
         user.setPassword(encodedPassword);
 
         user.setResetPasswordToken(null);
-        appUserRepository.save(user);
+        appUserRepositoryDAO.save(user);
     }
 
 //    ///////////////////////////////////////////////////////////////////////////////
@@ -61,11 +66,11 @@ public class AppUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return appUserRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+        return appUserRepositoryDAO.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
     }
 
     public String signUpUser(AppUser appUser) {
-        boolean userExists = appUserRepository.findByEmail(appUser.getEmail()).isPresent();
+        boolean userExists = appUserRepositoryDAO.findByEmail(appUser.getEmail()).isPresent();
 
         if (userExists) {
             // TODO check of attributes are the same and
@@ -78,13 +83,13 @@ public class AppUserService implements UserDetailsService {
 
         appUser.setPassword(encodedPassword);
 
-        appUserRepository.save(appUser);
+        appUserRepositoryDAO.save(appUser);
 
         String token = UUID.randomUUID().toString();
 
         ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), appUser);
 
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
+        confirmationTokenServiceBOImpl.saveConfirmationToken(confirmationToken);
 
 //        TODO: SEND EMAIL
 
@@ -92,6 +97,6 @@ public class AppUserService implements UserDetailsService {
     }
 
     public int enableAppUser(String email) {
-        return appUserRepository.enableAppUser(email);
+        return appUserRepositoryDAO.enableAppUser(email);
     }
 }

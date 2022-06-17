@@ -3,8 +3,8 @@
  * Date :6/16/2022
  */
 
-package com.example.demo.email;
+package com.example.demo.business;
 
-public interface EmailSender {
+public interface EmailSenderBO {
     void send(String to, String email);
 }

@@ -3,8 +3,9 @@
  * Date :6/14/2022
  */
 
-package com.example.demo.appuser;
+package com.example.demo.DAO;
 
+import com.example.demo.entity.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,17 +16,17 @@ import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
-public interface AppUserRepository extends JpaRepository<AppUser, Long> {
+public interface AppUserRepositoryDAO extends JpaRepository<AppUser, Long> {
 
     Optional<AppUser> findByEmail(String email);
 
     @Transactional
     @Modifying
     @Query("UPDATE AppUser a " + "SET a.enabled = TRUE WHERE a.email = ?1")
-    int enableAppUser(String email);
+    int enableAppUser(String email); // Enable App User
 
 
-    @Query("SELECT c FROM AppUser c WHERE c.email = ?1")
+    @Query("SELECT c FROM AppUser c WHERE c.email = ?1") // Find App User Object by email (unique).
     AppUser findByUserEmail(String email);
 
     AppUser findByResetPasswordToken(String token);

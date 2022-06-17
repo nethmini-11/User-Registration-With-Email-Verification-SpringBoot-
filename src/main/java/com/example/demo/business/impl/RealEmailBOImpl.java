@@ -3,7 +3,7 @@
  * Date :6/16/2022
  */
 
-package com.example.demo.email;
+package com.example.demo.business.impl;
 
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Properties;
 
 @Service
-public class RealEmail {
+public class RealEmailBOImpl {
 
     public void sendMailToNewAppUser(String name, String email) {
         String smsSender = "chamathrivindu12000@gmail.com";

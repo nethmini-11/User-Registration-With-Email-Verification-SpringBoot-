@@ -18,8 +18,25 @@ spring:
           auth: true
           starttls:
             enable: true
-          connectiontimeout: 5000
+          connection-timeout: 5000
           timeout: 3000
-          writetimeout: 5000
+          write timeout: 5000
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: YOUR_GOOGLE_APP_CLIENT_ID
+            clientSecret: YOUR_GOOGLE_APP_SECRET_KEY
+            scope:
+              - email
+              - profile
+
+          facebook:
+            clientId: YOUR_FACEBOOK_APP_CLIENT_ID
+            clientSecret: YOUR_FACEBOOK_APP_SECRET_KEY
+            scope:
+              - email
+              - public_profile
 
 

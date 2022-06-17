@@ -3,9 +3,8 @@
  * Date :6/16/2022
  */
 
-package com.example.demo.registration.token;
+package com.example.demo.entity;
 
-import com.example.demo.appuser.AppUser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,10 +16,12 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Entity
-public class ConfirmationToken {
+public class ConfirmationToken { // Entity for Confirm Generated token is match to Email verified token
 
     @SequenceGenerator(name = "confirmation_token_sequence", sequenceName = "confirmation_token_sequence", allocationSize = 1)
     @Id
+     /*  GenerationType.SEQUENCE is my preferred way to generate primary key values and uses a
+        database sequence to generate unique values */
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "confirmation_token_sequence")
     private Long id;
 
@@ -28,6 +29,7 @@ public class ConfirmationToken {
     private String token;
 
     @Column(nullable = false)
+    // Once User Confirm the email This column will Fill
     private LocalDateTime createdAt;
 
     @Column(nullable = false)

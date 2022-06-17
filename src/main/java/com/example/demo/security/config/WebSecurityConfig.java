@@ -5,7 +5,7 @@
 
 package com.example.demo.security.config;
 
-import com.example.demo.appuser.AppUserService;
+import com.example.demo.business.impl.AppUserServiceBOImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +22,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final AppUserService appUserService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AppUserServiceBOImpl appUserServiceBOImpl; // Reference Object to AppUserService
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;// Reference Object to bCryptPasswordEncoder
 
 
 //    @Bean
@@ -34,10 +34,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // Give Permission to Enter Reset Password Form
         http.csrf().disable().authorizeRequests().antMatchers("/reset_password/reset/**").permitAll();
+        // Give Permission to Register Page. (To the System)
         http.csrf().disable().authorizeRequests().antMatchers("/api/v*/registration/**").permitAll().anyRequest().authenticated().and().formLogin();
-
-
     }
 //    public void authWithoutPassword(AppUser user){
 //
@@ -52,15 +52,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    // configuring Spring Security to authenticate and authorize users
+    protected void configure(AuthenticationManagerBuilder auth)  {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 
     @Bean
+    // DaoAuthenticationProvider use the UserDetailsService to authenticate a username and password.
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(bCryptPasswordEncoder);
-        provider.setUserDetailsService(appUserService);
+        provider.setUserDetailsService(appUserServiceBOImpl);
         return provider;
     }
 }

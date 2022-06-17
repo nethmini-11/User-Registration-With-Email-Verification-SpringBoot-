@@ -3,8 +3,9 @@
  * Date :6/16/2022
  */
 
-package com.example.demo.email;
+package com.example.demo.business.impl;
 
+import com.example.demo.business.EmailSenderBO;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +19,9 @@ import javax.mail.internet.MimeMessage;
 
 @Service
 @AllArgsConstructor
-public class EmailService implements EmailSender {
+public class EmailServiceBOImpl implements EmailSenderBO {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(EmailServiceBOImpl.class);
 
     private final JavaMailSender mailSender;
 
@@ -33,7 +34,7 @@ public class EmailService implements EmailSender {
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Confirm your email");
-            helper.setFrom("rivinduchamath1000@gmail.com");
+            helper.setFrom("chamathrivindu12000@gmail.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
