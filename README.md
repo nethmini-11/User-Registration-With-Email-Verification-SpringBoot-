@@ -4,5 +4,5 @@
 
 <a>
 
-<img src="email.PNG" alt="Logo" width="1400" height="1500">
+<img src="email.png" alt="Logo" width="1400" height="1500">
 </a> 
