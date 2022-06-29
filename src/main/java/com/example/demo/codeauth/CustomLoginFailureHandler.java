@@ -12,15 +12,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.example.demo.business.AppUserServiceBO;
 import com.example.demo.business.impl.LoginAttemptsUserServicesBOImpl;
 import com.example.demo.entity.AppUser;
+import com.example.demo.security.PasswordEncoder;
 import com.example.demo.security.config.WebSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,11 +36,16 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
    @Autowired
    private LoginAttemptsUserServicesBOImpl userService;
 
+   @Autowired
+   protected AuthenticationManager authenticationManager;
+   @Autowired
+   private BCryptPasswordEncoder passwordEncoder;
    @Override
    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                        AuthenticationException exception) throws IOException, ServletException {
       boolean validate = true;
       String email = request.getParameter("email");
+      String password = request.getParameter("password");
       AppUser user = userService.getByEmail(email);
 
 
@@ -51,18 +63,21 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
          } else if (!user.isAccountNonLocked()) {
             if (userService.unlockWhenTimeExpired(user)) {
                super.setAllowSessionCreation(true);
-               System.out.println(user.getUsername());
-//               new CustomLoginSuccessHandler().onAuthenticationSuccess(request,response,null);
-              // SimpleUrlAuthenticationSuccessHandler handler = new SimpleUrlAuthenticationSuccessHandler();
+
+                  UsernamePasswordAuthenticationToken authToken =
+                          new UsernamePasswordAuthenticationToken(user.getUsername(), password);
+                  authToken.setDetails(new WebAuthenticationDetails(request));
+                  Authentication authentication = authenticationManager.authenticate(authToken);
+                  SecurityContextHolder.getContext().setAuthentication(authentication);
+                  new CustomLoginSuccessHandler().onAuthenticationSuccess(request,response,authentication);
+
 
                validate =false;
 
                exception = new LockedException("Your account has been unlocked. Please try to login again.");
             }
          }
-
       }
-
     //  super.setDefaultFailureUrl("/login?error");
       if (validate)  super.onAuthenticationFailure(request, response, exception);
    }
