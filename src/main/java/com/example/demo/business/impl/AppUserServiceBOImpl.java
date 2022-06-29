@@ -20,13 +20,15 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static com.example.demo.security.config.CommonConfig.USER_NOT_FOUND_MSG;
+
+
 @Service
 @AllArgsConstructor
 @CrossOrigin
 public class AppUserServiceBOImpl implements UserDetailsService, AppUserServiceBO {
 
-    // loadUserByUsername If Not Found
-    private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
+
 
     // App User DAO Class
     private final AppUserRepositoryDAO appUserRepositoryDAO;

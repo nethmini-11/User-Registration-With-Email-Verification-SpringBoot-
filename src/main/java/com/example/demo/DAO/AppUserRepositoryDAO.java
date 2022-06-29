@@ -30,4 +30,11 @@ public interface AppUserRepositoryDAO extends JpaRepository<AppUser, Long> {
     AppUser findByUserEmail(String email);
 
     AppUser findByResetPasswordToken(String token);
+
+
+    @Query("UPDATE AppUser u SET u.failedAttempt = ?1 WHERE u.email = ?2")
+    @Modifying
+    public void updateFailedAttempts(int failAttempts, String email);
+
+
 }

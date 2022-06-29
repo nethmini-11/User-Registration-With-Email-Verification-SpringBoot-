@@ -12,4 +12,11 @@ public class CommonConfig {
     public static String NAME_EMAIL_FROM ="Rivindu";
     public static String EMAIL_FROM_PASSWORD ="oighhaziivrlroax";
 
+    // loadUserByUsername If Not Found
+    public static String USER_NOT_FOUND_MSG = "user with email %s not found";
+
+
+
+
+
 }

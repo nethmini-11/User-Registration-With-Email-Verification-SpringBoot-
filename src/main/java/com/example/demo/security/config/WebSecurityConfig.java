@@ -6,7 +6,12 @@
 package com.example.demo.security.config;
 
 import com.example.demo.business.impl.AppUserServiceBOImpl;
+import com.example.demo.codeauth.CustomLoginFailureHandler;
+import com.example.demo.codeauth.CustomLoginSuccessHandler;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -26,18 +31,51 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;// Reference Object to bCryptPasswordEncoder
 
 
-//    @Bean
+    //    @Bean
 //    @Override
 //    public AuthenticationManager authenticationManagerBean() throws Exception {
 //        return super.authenticationManagerBean();
 //    }
+    @Autowired
+    private CustomLoginFailureHandler loginFailureHandler;
+
+    @Autowired
+    private CustomLoginSuccessHandler loginSuccessHandler;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+
         // Give Permission to Enter Reset Password Form
         http.csrf().disable().authorizeRequests().antMatchers("/reset_password/reset/**").permitAll();
         // Give Permission to Register Page. (To the System)
-        http.csrf().disable().authorizeRequests().antMatchers("/api/v*/registration/**").permitAll().anyRequest().authenticated().and().formLogin();
+        // http.csrf().disable().authorizeRequests().antMatchers("/api/v*/registration/**").permitAll().anyRequest().authenticated().and().formLogin();;
+
+        http.csrf().disable()
+                .authorizeRequests().antMatchers("/api/v*/registration/**").permitAll()
+//                .and()
+//                .authorizeRequests().antMatchers("/login").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .usernameParameter("email")
+                .failureHandler(loginFailureHandler)
+                .successHandler(loginSuccessHandler).defaultSuccessUrl("/reset_password/reset/**")
+                .and()
+                .formLogin();
+
+        /*
+               http.authorizeRequests().antMatchers("/login").permitAll().anyRequest().authenticated().and().
+                formLogin().loginPage("/login").usernameParameter("email").failureHandler(loginFailureHandler).successHandler(loginSuccessHandler).permitAll();
+        */
+
+//                http.csrf().disable().authorizeRequests().antMatchers("/api/v*/registration/**","/login").permitAll().anyRequest().authenticated()
+//                        .and().formLogin()
+//.loginPage("/login").usernameParameter("email").failureHandler(loginFailureHandler).successHandler(loginSuccessHandler).permitAll();
+
+
+//.anyRequest().authenticated()
     }
 //    public void authWithoutPassword(AppUser user){
 //
@@ -53,7 +91,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     // configuring Spring Security to authenticate and authorize users
-    protected void configure(AuthenticationManagerBuilder auth)  {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 

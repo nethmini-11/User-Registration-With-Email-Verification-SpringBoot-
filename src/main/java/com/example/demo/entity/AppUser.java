@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -44,6 +45,12 @@ public class AppUser implements UserDetails { // Store data in AppUser table aft
     private Boolean enabled = false;
 
     private String resetPasswordToken;
+
+    private boolean accountNonLocked;
+
+    private int failedAttempt;
+
+    private Date lockTime;
 
     public AppUser(String firstName, String lastName, String email, String password, AppUserRoleEnum appUserRoleEnum) {
         this.firstName = firstName;
@@ -96,4 +103,6 @@ public class AppUser implements UserDetails { // Store data in AppUser table aft
     public boolean isEnabled() {
         return enabled;
     }
+
+
 }
