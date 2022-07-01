@@ -6,6 +6,7 @@
 package com.example.demo.DAO;
 
 import com.example.demo.entity.AppUser;
+import com.example.demo.enumpackage.AuthenticationType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -35,6 +36,7 @@ public interface AppUserRepositoryDAO extends JpaRepository<AppUser, Long> {
     @Query("UPDATE AppUser u SET u.failedAttempt = ?1 WHERE u.email = ?2")
     @Modifying
     public void updateFailedAttempts(int failAttempts, String email);
-
-
+    @Modifying
+    @Query("UPDATE AppUser u SET u.authType = ?2 WHERE u.email = ?1")
+    void updateAuthenticationType(String username, AuthenticationType authType1);
 }

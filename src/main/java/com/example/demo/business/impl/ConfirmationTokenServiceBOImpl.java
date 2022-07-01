@@ -21,6 +21,8 @@ public class ConfirmationTokenServiceBOImpl { // Confirm Generated token is matc
     // Calling to DAO Repository to ConfirmationToken to access Entity
     private final ConfirmationTokenRepositoryDAO confirmationTokenRepositoryDAO;
 
+
+
     // Save token before send an email, to check whether token in match to email verification token
     public void saveConfirmationToken(ConfirmationToken token) {
         confirmationTokenRepositoryDAO.save(token);

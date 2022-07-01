@@ -6,14 +6,17 @@
 package com.example.demo.entity;
 
 import com.example.demo.enumpackage.AppUserRoleEnum;
+import com.example.demo.enumpackage.AuthenticationType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,6 +55,12 @@ public class AppUser implements UserDetails { // Store data in AppUser table aft
 
     private Date lockTime;
 
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_type")
+    private AuthenticationType authType;
+    //////////////////////////////////////////////////////////////////////////////////////
     public AppUser(String firstName, String lastName, String email, String password, AppUserRoleEnum appUserRoleEnum) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -60,12 +69,40 @@ public class AppUser implements UserDetails { // Store data in AppUser table aft
         this.appUserRoleEnum = appUserRoleEnum;
     }
 
+    public AppUser(Long id, String firstName, String lastName, String email, String password, AppUserRoleEnum appUserRoleEnum) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.appUserRoleEnum = appUserRoleEnum;
+    }
+
+    public AppUser(String givenName, String name, String username, AppUserRoleEnum roleUser, AuthenticationType role) {
+        this.firstName = givenName;
+        this.lastName = name;
+        this.email = username;
+        this.authType = (role);
+        this.appUserRoleEnum = roleUser;
+
+    }
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(appUserRoleEnum.name());
         return Collections.singletonList(authority);
     }
+    //////////////////////////////////////////////////////////////////////////////////////
+    public AuthenticationType getAuthType() {
+        return authType;
+    }
 
+    public void setAuthType(AuthenticationType authType) {
+        this.authType = authType;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////
     @Override
     public String getPassword() {
         return password;

@@ -6,8 +6,10 @@
 package com.example.demo.security.config;
 
 import com.example.demo.business.impl.AppUserServiceBOImpl;
+import com.example.demo.business.impl.CustomOAuth2UserService;
 import com.example.demo.codeauth.CustomLoginFailureHandler;
 import com.example.demo.codeauth.CustomLoginSuccessHandler;
+import com.example.demo.codeauth.OnAuthenticationSuccessHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +38,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    public AuthenticationManager authenticationManagerBean() throws Exception {
 //        return super.authenticationManagerBean();
 //    }
+    ///////////////////////////////////////////////
+    @Autowired
+    private OnAuthenticationSuccessHandler oauthLoginSuccessHandler;
+
+    @Autowired
+    private CustomOAuth2UserService oauth2UserService;
+    ///////////////////////////////////////////
     @Autowired
     private CustomLoginFailureHandler loginFailureHandler;
 
@@ -66,6 +75,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("email")
                 .successHandler(loginSuccessHandler)
                 .failureHandler(loginFailureHandler)
+                .and()
+                .oauth2Login()
+                .userInfoEndpoint()
+                .userService(oauth2UserService)
+                .and()
+                .successHandler(oauthLoginSuccessHandler)
 //                .defaultSuccessUrl("/reset_password/reset/**")
                 .and()
                 .formLogin();

@@ -84,7 +84,6 @@ public class AppUserServiceBOImpl implements UserDetailsService, AppUserServiceB
 
             throw new IllegalStateException("email already taken");
         }
-
         String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
 
         appUser.setPassword(encodedPassword);
@@ -102,7 +101,9 @@ public class AppUserServiceBOImpl implements UserDetailsService, AppUserServiceB
         return token;
     }
 
-    public int enableAppUser(String email) {
+
+
+         public int enableAppUser(String email) {
         return appUserRepositoryDAO.enableAppUser(email);
     }
 }

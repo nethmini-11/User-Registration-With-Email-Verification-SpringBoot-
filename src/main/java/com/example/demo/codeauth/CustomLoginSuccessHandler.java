@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.example.demo.business.impl.LoginAttemptsServiceBOImpl;
 import com.example.demo.business.impl.LoginAttemptsUserServicesBOImpl;
 import com.example.demo.entity.AppUser;
+import com.example.demo.enumpackage.AuthenticationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -26,12 +27,31 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
    @Autowired
    private LoginAttemptsUserServicesBOImpl userService;
 
+
+
    @Override
    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                        Authentication authentication) throws IOException, ServletException {
-      System.out.println(authentication);
+
       AppUser user =  (AppUser) authentication.getPrincipal();
+
+
+      //////////////////////////////////////////////////////////
+
+//      String oauth2ClientName = String.valueOf(user.getAuthType());
+//      String username = user.getEmail();
+
+      //////////////////////////////////////////////////////////
+
+
       if (user.getFailedAttempt() > 0) {
+
+         //////////////////////////////////////////////////////////
+
+        // userService.updateAuthenticationType(username, oauth2ClientName);
+
+         //////////////////////////////////////////////////////////
+
          userService.resetFailedAttempts(user.getEmail());
       }
 

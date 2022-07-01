@@ -26,15 +26,15 @@ spring:
       client:
         registration:
           google:
-            clientId: YOUR_GOOGLE_APP_CLIENT_ID
-            clientSecret: YOUR_GOOGLE_APP_SECRET_KEY
+            clientId: 1046526186364-1ff4ii7rmelqo7q7d0dqjsum4a7rgkg0.apps.googleusercontent.com
+            clientSecret: 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
             scope:
               - email
               - profile
 
           facebook:
-            clientId: YOUR_FACEBOOK_APP_CLIENT_ID
-            clientSecret: YOUR_FACEBOOK_APP_SECRET_KEY
+            clientId: 713999016373246
+            clientSecret: f442c0143cb94e65bd83d402ac5835bf
             scope:
               - email
               - public_profile

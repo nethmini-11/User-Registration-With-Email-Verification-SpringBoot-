@@ -8,12 +8,16 @@ package com.example.demo.business.impl;
 
 import com.example.demo.DAO.AppUserRepositoryDAO;
 import com.example.demo.entity.AppUser;
+import com.example.demo.enumpackage.AuthenticationType;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.Date;
 
@@ -65,5 +69,21 @@ public class LoginAttemptsUserServicesBOImpl {
 
     public AppUser getByEmail(String email) {
         return repo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+    }
+
+    public void updateAuthenticationType(String username, String authTypeName) {
+        AuthenticationType authType1 = AuthenticationType.valueOf(authTypeName.toUpperCase());
+        System.out.println("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR " +username);
+       // repo.save(username, authType1);
+    }
+//String firstName, String lastName, String email, String password, AppUserRoleEnum appUserRoleEnum
+  /*  public void updateAuthenticationType(String givenName, String name, String username, String password, String oauth2ClientName, String role) {
+        AuthenticationType authType1 = AuthenticationType.valueOf(oauth2ClientName.toUpperCase());
+        System.out.println("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR " +username);
+        repo.save(givenName,name, username,role);
+    }*/
+
+    public void updateAuthenticationType(AppUser appUser) {
+        repo.save(appUser);
     }
 }
