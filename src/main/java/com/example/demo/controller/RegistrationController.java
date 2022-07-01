@@ -34,7 +34,6 @@ public class RegistrationController { // Registration Controller
         } catch (IllegalStateException e) {
             log.info("Token Not Found");
         }
-
         return confirm;
     }
 
