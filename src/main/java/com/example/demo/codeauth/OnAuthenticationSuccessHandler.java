@@ -34,17 +34,20 @@ public class OnAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
       String oauth2ClientName = oauth2User.getOauth2ClientName();
       String username = oauth2User.getEmail();
       String name = oauth2User.getName();
-      String givenName = String.valueOf(oauth2User.getAttributes().get(2));
-      String lastName = String.valueOf(oauth2User.getAttributes().get(1));
-      String password = "";
-    //  System.out.println("AAAAAAAAAAAAAAAAAAAA "+username +" SSSSSSSSSSSSSSSSS "+name +"  "+nnn+" asas "+ddsd);
+      String fName = String.valueOf(oauth2User.getAttributes().get(1));
 
-      String role = String.valueOf(AppUserRoleEnum.ROLE_USER);
-//String firstName, String lastName, String email, String password, AppUserRoleEnum appUserRoleEnum
 
-      userService.updateAuthenticationType(new AppUser(givenName,name,username,AppUserRoleEnum.ROLE_USER  , AuthenticationType.GOOGLE));
+      userService.updateAuthenticationType(new AppUser(fName,name,username,AppUserRoleEnum.ROLE_USER  , getAuth(oauth2ClientName)));
 
       super.onAuthenticationSuccess(request, response, authentication);
    }
-
+   public static AuthenticationType getAuth(String oauth2ClientName) {
+      for(AuthenticationType auth : AuthenticationType.values()) {
+         String aut = String.valueOf(auth);
+         if(aut.equals(oauth2ClientName)) {
+            return auth;
+         }
+      }
+      return null; //Or thrown exception
+   }
 }

@@ -32,19 +32,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final AppUserServiceBOImpl appUserServiceBOImpl; // Reference Object to AppUserService
     private final BCryptPasswordEncoder bCryptPasswordEncoder;// Reference Object to bCryptPasswordEncoder
 
-
-    //    @Bean
-//    @Override
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
-    ///////////////////////////////////////////////
     @Autowired
     private OnAuthenticationSuccessHandler oauthLoginSuccessHandler;
 
     @Autowired
     private CustomOAuth2UserService oauth2UserService;
-    ///////////////////////////////////////////
+
     @Autowired
     private CustomLoginFailureHandler loginFailureHandler;
 
@@ -85,29 +78,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin();
 
-        /*
-               http.authorizeRequests().antMatchers("/login").permitAll().anyRequest().authenticated().and().
-                formLogin().loginPage("/login").usernameParameter("email").failureHandler(loginFailureHandler).successHandler(loginSuccessHandler).permitAll();
-        */
 
-//                http.csrf().disable().authorizeRequests().antMatchers("/api/v*/registration/**","/login").permitAll().anyRequest().authenticated()
-//                        .and().formLogin()
-//.loginPage("/login").usernameParameter("email").failureHandler(loginFailureHandler).successHandler(loginSuccessHandler).permitAll();
-
-
-//.anyRequest().authenticated()
     }
-//    public void authWithoutPassword(AppUser user){
-//
-//        List<Privilege> privileges = user.getAppUserRole().stream().map(Role::getPrivileges)
-//                .flatMap(Collection::stream).distinct().collect(Collectors.toList());
-//        List<GrantedAuthority> authorities = privileges.stream()
-//                .map(p -> new SimpleGrantedAuthority(p.getName()))
-//                .collect(Collectors.toList());
-//
-//        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//    }
+
 
     @Override
     // configuring Spring Security to authenticate and authorize users

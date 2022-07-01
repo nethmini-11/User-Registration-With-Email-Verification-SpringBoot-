@@ -21,9 +21,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
+
+import static com.example.demo.security.config.CommonConfig.USER_NOT_FOUND_MSG;
 
 @Component
 public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
@@ -39,7 +42,15 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
       boolean validate = true;
       String email = request.getParameter("email");
       String password = request.getParameter("password");
-      AppUser user = userService.getByEmail(email);
+      AppUser user =null;
+      try {
+         user = userService.getByEmail(email);
+      }catch (UsernameNotFoundException e){
+         throw ( new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
+      }
+
+
+
 
 
 
