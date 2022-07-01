@@ -6,5 +6,5 @@
 
 package com.example.demo.enumpackage;
 public enum AuthenticationType {
-     Facebook, Google
+     Facebook, Google, Manual
 }

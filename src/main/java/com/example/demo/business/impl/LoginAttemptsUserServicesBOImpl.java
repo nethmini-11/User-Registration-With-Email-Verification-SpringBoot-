@@ -70,6 +70,7 @@ public class LoginAttemptsUserServicesBOImpl {
         try {
           Optional<AppUser> user =  repo.findByEmail(appUser.getEmail());
             if(user.isEmpty()) repo.save(appUser);
+            else repo.updateAuthenticationType(appUser.getEmail(),appUser.getAuthType());
 
         }catch (Exception e){
           e.printStackTrace();

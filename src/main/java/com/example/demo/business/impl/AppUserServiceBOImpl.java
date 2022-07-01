@@ -9,6 +9,8 @@ import com.example.demo.DAO.AppUserRepositoryDAO;
 import com.example.demo.business.AppUserServiceBO;
 import com.example.demo.entity.AppUser;
 import com.example.demo.entity.ConfirmationToken;
+import com.example.demo.enumpackage.AppUserRoleEnum;
+import com.example.demo.enumpackage.AuthenticationType;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -87,6 +89,15 @@ public class AppUserServiceBOImpl implements UserDetailsService, AppUserServiceB
         String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
 
         appUser.setPassword(encodedPassword);
+        String aut = "Manual";
+        AuthenticationType authManual = null;
+        for(AuthenticationType auth : AuthenticationType.values()) {
+            String aut2 = String.valueOf(auth);
+            if(aut.equals(aut2)) {
+                authManual = auth;
+            }
+        }
+        appUser.setAuthType(authManual);
 
         appUserRepositoryDAO.save(appUser);
 

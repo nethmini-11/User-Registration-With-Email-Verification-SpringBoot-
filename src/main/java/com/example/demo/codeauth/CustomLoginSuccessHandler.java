@@ -36,21 +36,8 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
       AppUser user =  (AppUser) authentication.getPrincipal();
 
 
-      //////////////////////////////////////////////////////////
-
-//      String oauth2ClientName = String.valueOf(user.getAuthType());
-//      String username = user.getEmail();
-
-      //////////////////////////////////////////////////////////
-
-
       if (user.getFailedAttempt() > 0) {
 
-         //////////////////////////////////////////////////////////
-
-        // userService.updateAuthenticationType(username, oauth2ClientName);
-
-         //////////////////////////////////////////////////////////
 
          userService.resetFailedAttempts(user.getEmail());
       }
@@ -59,7 +46,6 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
    }
 
    void authSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
-      System.out.println("Inside Autttttttttttth Success");
       super.onAuthenticationSuccess(request, response, authentication);
    }
 

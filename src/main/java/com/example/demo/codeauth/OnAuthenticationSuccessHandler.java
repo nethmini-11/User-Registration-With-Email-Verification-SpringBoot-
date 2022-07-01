@@ -37,7 +37,7 @@ public class OnAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
       String fName = String.valueOf(oauth2User.getAttributes().get(1));
 
 
-      userService.updateAuthenticationType(new AppUser(fName,name,username,AppUserRoleEnum.ROLE_USER  , getAuth(oauth2ClientName)));
+      userService.updateAuthenticationType(new AppUser(fName,name,username,AppUserRoleEnum.ROLE_USER, getAuth(oauth2ClientName)));
 
       super.onAuthenticationSuccess(request, response, authentication);
    }
